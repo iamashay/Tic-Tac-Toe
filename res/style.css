@@ -47,3 +47,15 @@ body {
     font-size: 35px;
     font-weight: 900;
 }
+
+.game-info {
+    display: flex;
+    justify-content: space-between;
+}
+
+.player, .computer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 25px;
+}
