@@ -50,7 +50,7 @@ const gameBoard = (() => {
 
         }
 
-        for (let i=0; i<= 6; i=+3){  //check horizontal matches
+        for (let i=0; i<= 6; i+=3){  //check horizontal matches
             matchCount = {'X': 0, 'O': 0}; //reset matches
             for (let j=i; j<=i+2; j++){
                 if (_gameArr[i] === _gameArr[j]){
@@ -68,9 +68,25 @@ const gameBoard = (() => {
         return false;
 
     }
+
+    const getResult = () => {
+        let currentResult = gameResult();
+        if (currentResult === 'X'){
+            player1.score += 1;
+            return player1.score
+        }else if (currentResult === 'O'){
+            player2.score += 1;
+            return player2.score
+        }else if (currentResult === 'Tie'){
+            return 'Tie'
+        }else {
+            return false;
+        }
+    }
+
     return {
         makeMove,
-        gameResult,
+        getResult,
         currentTurn,
     }
 })();
@@ -82,17 +98,31 @@ const displayController = (() => {
     const gameGridsArr = [...gameGrids];
     const playerScoreCard = document.querySelector(".player-score");
     const opponentScoreCard = document.querySelector(".opponent-score");
+    const gameMsg = document.querySelector(".game-message");
+
+    const displayTurn = () => {
+        gameMsg.innerText = `${gameBoard.currentTurn.name}'s turn!`;
+    }
+
+    const toggleTurn = () => {
+        gameBoard.currentTurn === player1 ? gameBoard.currentTurn = player2 : gameBoard.currentTurn = player1;
+    }
+
+    const updateResult = () => {
+        let currentResult = gameBoard.getResult;
+        
+    }
 
     const markMove = (elm, position) => {
         if (elm.innerText === "X" || elm.innerText === "O") return;
         elm.innerText = gameBoard.currentTurn.move;
         gameBoard.makeMove(gameBoard.currentTurn.move, position)
-        gameBoard.currentTurn === player1 ? gameBoard.currentTurn = player2 : gameBoard.currentTurn = player1;
+        toggleTurn();
+        displayTurn();
     }
 
     gameGridsArr.forEach((grid, index) => grid.addEventListener('click', (event) => {
         markMove(event.target, index);
-    
     }))
 
 })();
