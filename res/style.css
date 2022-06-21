@@ -56,7 +56,7 @@ body {
     justify-content: space-between;
 }
 
-.player, .computer {
+.player, .opponent {
     display: flex;
     align-items: center;
     gap: 10px;
