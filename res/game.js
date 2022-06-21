@@ -30,7 +30,7 @@ const gameBoard = (() => {
                 if (_gameArr[i] === _gameArr[j]){
                     matchCount[_gameArr[i]]++;
                 }
-                            if (matchCount['X'] === 3) return 'X';
+                if (matchCount['X'] === 3) return 'X';
                 if (matchCount['O'] === 3) return 'O';
             }
 
