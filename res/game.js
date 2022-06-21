@@ -15,7 +15,7 @@ const gameBoard = (() => {
     const _gameArr = [];
 
     let currentTurn = player1; //First player to begin
-    let continueGame = true;
+    let continueGameStatus = true;
 
     const makeMove = (move, position) => {
         _gameArr[position] = move;
@@ -24,7 +24,7 @@ const gameBoard = (() => {
 
     const gameResult = () => {
         
-        if (!continueGame) return false;
+        if (!continueGameStatus) return false;
 
         let matchCount = {'X': 0, 'O': 0}; //initiate matches object
 
@@ -67,7 +67,7 @@ const gameBoard = (() => {
 
 
         }
-        if (Object.values(_gameArr).length == _gameArr.length) return "Tie";
+        if (Object.values(_gameArr).length == 9) return "Tie";
 
         return false;
 
@@ -77,21 +77,30 @@ const gameBoard = (() => {
         let currentResult = gameResult();
         if (player1.move === currentResult){
             player1.score += 1;
-            continueGame = false;
+            continueGameStatus = false;
         }else if(player2.move === currentResult){
             player2.score += 1;
-            continueGame = false;
+            continueGameStatus = false;
         }
         return currentResult;
     }
 
-    const getGameStatus = () => continueGame;
+    const getGameStatus = () => continueGameStatus;
+
+
+
+    const continueGame = () => {
+        continueGameStatus = true;
+        _gameArr = []
+
+    }
 
     return {
         makeMove,
         getResult,
         currentTurn,
-        getGameStatus
+        getGameStatus,
+        continueGame
     }
 })();
 
@@ -103,6 +112,8 @@ const displayController = (() => {
     const playerScoreCard = document.querySelector(".player-score");
     const opponentScoreCard = document.querySelector(".opponent-score");
     const gameMsg = document.querySelector(".game-message");
+    const continueGamePopup = document.querySelector(".continue-popup");
+    const continueGameBut = document.querySelector(".continue-but");
 
     const displayTurn = () => {
         gameMsg.innerText = `${gameBoard.currentTurn.name}'s turn!`;
@@ -117,13 +128,21 @@ const displayController = (() => {
         if (currentResult === 'X'){
             playerScoreCard.innerText = `(${player1.score})`
             gameMsg.innerText = `${player1.name} won this round !`;
+            toggleContinueGamePopup();
         }else if (currentResult === 'O'){
             playerScoreCard.innerText = `(${player2.score})`
             gameMsg.innerText = `${player2.name} won this round !`;
-
+            toggleContinueGamePopup();
         }else if (currentResult === 'Tie'){
             gameMsg.innerText = `It's a Tie`;
+            toggleContinueGamePopup();
         }
+    }
+
+    const toggleContinueGamePopup = () => {
+        if (continueGamePopup.style.display  !== 'none')
+         continueGamePopup.style.display = "flex";
+        else continueGamePopup.style.display = "flex";
     }
 
     const markMove = (elm, position) => {
@@ -135,12 +154,24 @@ const displayController = (() => {
         toggleTurn();
         displayTurn();
         updateResult();
-    
+    }
+    const clearGameGrids = () => {
+        gameGridsArr.forEach((grid) => {
+            grid.innerText = "";
+        })
+    }
+    const continueGameDisplay = () => {
+        gameBoard.continueGame();
+        toggleContinueGamePopup()
+        clearGameGrids;
+        gameMsg.innerText = `${gameBoard.currentTurn.name} turn!`
     }
 
     gameGridsArr.forEach((grid, index) => grid.addEventListener('click', (event) => {
         markMove(event.target, index);
     }))
+
+    continueGameBut.addEventListener("click", continueGameDisplay)
 
 })();
 

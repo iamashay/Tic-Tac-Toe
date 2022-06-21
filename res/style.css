@@ -21,6 +21,7 @@ body {
     gap: 4px;
     width: fit-content;
     align-self: center;
+    position: relative;
 }
 
 #game-wrapper {
@@ -105,6 +106,16 @@ button:hover {
 .game-nav {
     margin-top: 50px;
     text-align: center;
+}
+
+.continue-popup {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background: #bdb7ae38;
+    display: none;
+    align-items: center;
+    justify-content: center;
 }
 
 @media only screen and (max-width: 600px) {
