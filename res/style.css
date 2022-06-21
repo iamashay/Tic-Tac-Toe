@@ -87,7 +87,23 @@ body {
 
 button {
     background: #f2ca98;
-    border: 1px solid #dea55f;
+    border: 1px solid #dea053;
+    padding: 12px;
+    font-size: 18px;
+    color: #a36a23;
+    text-shadow: 1px 1px 1px #fff;
+    box-shadow: inset 1px 1px #f4ece3;
+    cursor: pointer;
+    transition-duration: 400ms;
+}
+
+button:hover {
+    background: #ffdbae;
+}
+
+.game-nav {
+    margin-top: 50px;
+    text-align: center;
 }
 
 @media only screen and (max-width: 600px) {
