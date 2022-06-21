@@ -15,6 +15,7 @@ const gameBoard = (() => {
     const _gameArr = [];
 
     let currentTurn = player1; //First player to begin
+    let contiueGame = true;
 
     const makeMove = (move, position) => {
         _gameArr[position] = move;
@@ -22,6 +23,9 @@ const gameBoard = (() => {
     };
 
     const gameResult = () => {
+        
+        if (!contiueGame) return false;
+
         let matchCount = {'X': 0, 'O': 0}; //initiate matches object
 
         for (let i=0; i<= 2; i++){ //check vertical matches
@@ -71,23 +75,21 @@ const gameBoard = (() => {
 
     const getResult = () => {
         let currentResult = gameResult();
-        if (currentResult === 'X'){
+        if (player1.move === currentResult){
             player1.score += 1;
-            return player1.score
-        }else if (currentResult === 'O'){
+        }else if(player2.move === currentResult){
             player2.score += 1;
-            return player2.score
-        }else if (currentResult === 'Tie'){
-            return 'Tie'
-        }else {
-            return false;
         }
+        return currentResult;
     }
+
+    const getGameStatus = () => contiueGame;
 
     return {
         makeMove,
         getResult,
         currentTurn,
+        getGameStatus
     }
 })();
 
@@ -110,7 +112,13 @@ const displayController = (() => {
 
     const updateResult = () => {
         let currentResult = gameBoard.getResult;
-        
+        if (currentResult === 'X'){
+            playerScoreCard.innerText = `(${player1.score})`
+        }else if (currentResult === 'O'){
+            playerScoreCard.innerText = `(${player2.score})`
+        }else if (currentResult === 'Tie'){
+            gameMsg.innerText = `It's a Tie`;
+        }
     }
 
     const markMove = (elm, position) => {
@@ -119,6 +127,7 @@ const displayController = (() => {
         gameBoard.makeMove(gameBoard.currentTurn.move, position)
         toggleTurn();
         displayTurn();
+        updateResult();
     }
 
     gameGridsArr.forEach((grid, index) => grid.addEventListener('click', (event) => {
