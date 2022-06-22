@@ -12,7 +12,7 @@ const player1 = player("Ashay", "X")
 const player2 = player("Rahul", "O")
 
 const gameBoard = (() => {
-    const _gameArr = [];
+    let _gameArr = [];
 
     let currentTurn = player1; //First player to begin
     let continueGameStatus = true;
@@ -130,7 +130,7 @@ const displayController = (() => {
             gameMsg.innerText = `${player1.name} won this round !`;
             toggleContinueGamePopup();
         }else if (currentResult === 'O'){
-            playerScoreCard.innerText = `(${player2.score})`
+            opponentScoreCard.innerText = `(${player2.score})`
             gameMsg.innerText = `${player2.name} won this round !`;
             toggleContinueGamePopup();
         }else if (currentResult === 'Tie'){
@@ -140,9 +140,9 @@ const displayController = (() => {
     }
 
     const toggleContinueGamePopup = () => {
-        if (continueGamePopup.style.display  !== 'none')
+        if (!continueGamePopup.style.display || continueGamePopup.style.display  === 'none')
          continueGamePopup.style.display = "flex";
-        else continueGamePopup.style.display = "flex";
+        else continueGamePopup.style.display = "none";
     }
 
     const markMove = (elm, position) => {
@@ -163,8 +163,8 @@ const displayController = (() => {
     const continueGameDisplay = () => {
         gameBoard.continueGame();
         toggleContinueGamePopup()
-        clearGameGrids;
-        gameMsg.innerText = `${gameBoard.currentTurn.name} turn!`
+        clearGameGrids();
+        gameMsg.innerText = `Game started! ${gameBoard.currentTurn.name} turn!`
     }
 
     gameGridsArr.forEach((grid, index) => grid.addEventListener('click', (event) => {
