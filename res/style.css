@@ -38,6 +38,7 @@ body {
     flex-direction: column;
     width: max(40vw, 500px);
     padding: 20px;
+    display: none;
 }
 
 
@@ -71,10 +72,8 @@ body {
 }
 
 .game-message {
-    font-size: 25px;
     align-self: center;
     margin: 32px 0 45px 0;
-    color: #795628;
 }
 
 .logo {
@@ -117,6 +116,45 @@ button:hover {
     align-items: center;
     justify-content: center;
 }
+
+.login-container {
+    width: max(40vw, 500px);
+    padding: 20px;
+    display: flex;
+    gap: max(8vh, 50px);
+    flex-direction: column;
+}
+
+.custom-text {
+    color: #75716b;
+    font-size: 25px;
+}
+
+.choose-opponent {
+    display: flex;
+    gap: 10px;
+    justify-content: space-around;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #4b4843;
+}
+
+
+.choose-opponent div {
+    cursor: pointer;
+}
+
+.human-opponent, .computer-opponent {
+    opacity: 0.5;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.human-opponent:hover, .computer-opponent:hover {
+    opacity: 1;
+}
+
+
 
 @media only screen and (max-width: 600px) {
     .game-info {
