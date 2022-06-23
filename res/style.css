@@ -121,13 +121,18 @@ button:hover {
     width: max(40vw, 500px);
     padding: 20px;
     display: flex;
-    gap: max(8vh, 50px);
+    gap: max(6vh, 30px);
     flex-direction: column;
 }
 
 .custom-text {
     color: #75716b;
     font-size: 25px;
+}
+
+.custom-text-small {
+    color: #75716b;
+    font-size: 18px;
 }
 
 .choose-opponent {
@@ -138,6 +143,7 @@ button:hover {
     font-size: 18px;
     font-weight: bold;
     color: #4b4843;
+    animation-duration: 2s;
 }
 
 
@@ -145,13 +151,41 @@ button:hover {
     cursor: pointer;
 }
 
-.human-opponent, .computer-opponent {
+.human-opchooseOpponentDivponent, .computer-opponent {
     opacity: 0.5;
     transition: opacity 0.2s ease-in-out;
 }
 
 .human-opponent:hover, .computer-opponent:hover {
     opacity: 1;
+}
+
+.second-player-name-box {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;  
+    text-align: left;
+    font-size: 18px ;
+}
+
+#second-name-input {
+    padding: 10px;
+    width: 130px;
+    background: #fff7ed;
+    border: 1px solid #e4dcd2;
+    box-shadow: inset 1px 1px 1px 0px #d1d1d1;
+    font-size: 20px;
+    cursor: pointer;
+    transition-duration: 300ms;  
+}
+
+#second-name-input:hover {
+    border: 1px solid #d3c1aa;
+}
+
+input:focus {
+    outline: none;
 }
 
 

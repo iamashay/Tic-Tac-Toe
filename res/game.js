@@ -114,6 +114,11 @@ const displayController = (() => {
     const gameMsg = document.querySelector(".game-message");
     const continueGamePopup = document.querySelector(".continue-popup");
     const continueGameBut = document.querySelector(".continue-but");
+    const chooseOpponentDiv = document.querySelector('.choose-opponent')
+    const humanChoiceCard = document.querySelector(".human-opponent");
+    const computerChoiceCard = document.querySelector(".computer-opponent");
+    const secondHumanNameInput = document.querySelector("#second-name-input");
+    const secondPlayerNameBox = document.querySelector(".second-player-name-box");
 
     const displayTurn = () => {
         gameMsg.innerText = `${gameBoard.currentTurn.name}'s turn!`;
@@ -167,9 +172,33 @@ const displayController = (() => {
         gameMsg.innerText = `Game started! ${gameBoard.currentTurn.name} turn!`
     }
 
+    const toggleSecondPlayerBox = () => {
+        if (!secondPlayerNameBox.style.display || secondPlayerNameBox.style.display  === 'none')
+            secondPlayerNameBox.style.display = "flex";
+        else secondPlayerNameBox.style.display = "none";
+    } 
+
+    const chooseOpponent = (elm) => {
+        
+        if(elm.currentTarget.className.indexOf("human") > -1){
+            computerChoiceCard.style.display = "none";
+            humanChoiceCard.style.opacity = "1";
+            toggleSecondPlayerBox();
+            secondHumanNameInput.focus();
+            setTimeout(()=>chooseOpponentDiv.style.animation = "", 4000);
+        }else if (elm.currentTarget.className.indexOf("computer") > -1) {
+            humanChoiceCard.style.display = "none";
+            computerChoiceCard.style.opacity = "1";
+            setTimeout(()=>chooseOpponentDiv.style.animation = "", 400)
+        }
+    }
+
     gameGridsArr.forEach((grid, index) => grid.addEventListener('click', (event) => {
         markMove(event.target, index);
     }))
+
+    humanChoiceCard.addEventListener('click', chooseOpponent)
+    computerChoiceCard.addEventListener('click', chooseOpponent)
 
     continueGameBut.addEventListener("click", continueGameDisplay)
 
