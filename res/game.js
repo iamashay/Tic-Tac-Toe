@@ -191,11 +191,10 @@ const displayController = (() => {
             humanChoiceCard.style.opacity = "1";
             toggleSecondPlayerBox();
             secondHumanNameInput.focus();
-            setTimeout(()=>chooseOpponentDiv.style.animation = "", 4000);
         }else if (elm.currentTarget.className.indexOf("computer") > -1) {
             humanChoiceCard.style.display = "none";
             computerChoiceCard.style.opacity = "1";
-            setTimeout(()=>chooseOpponentDiv.style.animation = "", 400)
+            startGameClickEvent();
         }
     }
 
@@ -233,12 +232,9 @@ const displayController = (() => {
         toggleChoiceContainer();
     };
 
-    const startGameClickEvent = (event) => {
-        event.preventDefault();
-        let gameCounter = 6;
-        toggleCounterMsg();
-        toggleChoiceContainer(); 
-        counterMsg.textContent = `Starting game in ${--gameCounter}`
+    const startCounter = () => {
+        let gameCounter = 4;
+        counterMsg.textContent = `Starting game in ${--gameCounter}`;
         let counterInterval = setInterval(()=>{
             counterMsg.textContent = `Starting game in ${--gameCounter}`
             if (gameCounter <= 0){
@@ -247,11 +243,16 @@ const displayController = (() => {
                 toggleGameContainer();
             }
         }, 1000)
+    }
 
+    const startGameClickEvent = (event) => {
+        if (event) event.preventDefault(); //used in form event listener and with computer choice icon
+        toggleCounterMsg();
+        toggleChoiceContainer(); 
+        startCounter();
     }
 
     secondPlayerNameBox.addEventListener("submit", startGameClickEvent)
-
     humanChoiceCard.addEventListener('click', chooseOpponent)
     computerChoiceCard.addEventListener('click', chooseOpponent)
 
