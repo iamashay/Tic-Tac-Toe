@@ -120,10 +120,11 @@ const displayController = (() => {
     const secondHumanNameInput = document.querySelector("#second-name-input");
     const secondPlayerNameBox = document.querySelector(".second-player-name-box");
     const startBut = document.querySelector(".start-button");
-    const choiceMsg = document.querySelector(".choice-msg");
+    const counterMsg = document.querySelector(".counter-msg");
     const choiceContainer = document.querySelector(".choice-container");
     const gameContainer = document.querySelector(".game-container");
-
+    const loginContainer = document.querySelector(".login-container")
+    const firstHumanNameInput = document.querySelector("#first-name-input");
 
     const displayTurn = () => {
         gameMsg.innerText = `${gameBoard.currentTurn.name}'s turn!`;
@@ -214,23 +215,35 @@ const displayController = (() => {
         else gameContainer.style.display = "none";
     }
 
-    const toggleChoiceMsg = () => {
-        if (!choiceMsg.style.display || choiceMsg.style.display  === 'none')
-        choiceMsg.style.display = "flex";
-        else choiceMsg.style.display = "none";
+    const toggleCounterMsg = () => {
+        if (!counterMsg.style.display || counterMsg.style.display  === 'none')
+        counterMsg.style.display = "flex";
+        else counterMsg.style.display = "none";
     }
 
+    const toggleLoginContainer = () => {
+        if (!loginContainer.style.display || loginContainer.style.display  === 'none')
+        loginContainer.style.display = "flex";
+        else loginContainer.style.display = "none";
+    }
+
+    const loginGameEvent = (event) => {
+        event.preventDefault();
+        toggleLoginContainer();
+        toggleChoiceContainer();
+    };
 
     const startGameClickEvent = (event) => {
         event.preventDefault();
         let gameCounter = 6;
+        toggleCounterMsg();
         toggleChoiceContainer(); 
-        choiceMsg.textContent = `Starting game in ${--gameCounter}`
+        counterMsg.textContent = `Starting game in ${--gameCounter}`
         let counterInterval = setInterval(()=>{
-            choiceMsg.textContent = `Starting game in ${--gameCounter}`
+            counterMsg.textContent = `Starting game in ${--gameCounter}`
             if (gameCounter <= 0){
                 clearInterval(counterInterval);
-                toggleChoiceMsg();
+                toggleCounterMsg();
                 toggleGameContainer();
             }
         }, 1000)
@@ -243,6 +256,6 @@ const displayController = (() => {
     computerChoiceCard.addEventListener('click', chooseOpponent)
 
     continueGameBut.addEventListener("click", continueGameDisplay)
-
+    loginContainer.addEventListener("submit", loginGameEvent)
 })();
 
