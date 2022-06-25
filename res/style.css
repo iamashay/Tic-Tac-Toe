@@ -204,6 +204,9 @@ input:focus {
     margin-top: min(10vh, 60px);
 }
 
+.counter-msg {
+    margin-top: min(10vh, 60px);
+}
 
 
 @media only screen and (max-width: 600px) {
