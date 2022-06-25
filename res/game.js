@@ -1,5 +1,5 @@
 
-const player = (name, move) => {
+const player = (name, move, isHuman=true) => {
     let score = 0;
     return {
         name,
