@@ -243,7 +243,7 @@ const displayController = (() => {
     };
 
     const startCounter = () => {
-        let gameCounter = 4;
+        let gameCounter = 3;
         counterMsg.textContent = `Starting game in ${--gameCounter}`;
         let counterInterval = setInterval(()=>{
             counterMsg.textContent = `Starting game in ${--gameCounter}`
