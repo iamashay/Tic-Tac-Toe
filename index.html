@@ -36,18 +36,20 @@
             </div>
         </div>
 
-        <div class="login-container">
+        <div class="choice-container">
                 <div class="custom-text">Choose your opponent:-</div>
             <div class="choose-opponent">
                 <div class="human-opponent"><img src="https://icons.iconarchive.com/icons/diversity-avatars/avatars/96/cristiano-ronaldo-icon.png" alt="human-icon"><div>Human</div></div>
                 <div class="computer-opponent"><img src="https://icons.iconarchive.com/icons/diversity-avatars/avatars/96/robot-02-icon.png" alt="computer-icon"><div>Computer</div></div>
 
             </div>
-            <div class="second-player-name-box">
+            <form class="second-player-name-box">
                 <label for="secondname-input" class="custom-text-small">Second Player Name:</label>
-                <input type="text" id="second-name-input" maxlength="8">
-            </div>
+                <input type="text" id="second-name-input" maxlength="8" required>
+                <button type="submit" class="start-button">Start</button>
+            </form>
         </div>
+        <div class="choice-msg"></div>
 
     </div>
 </body>

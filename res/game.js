@@ -119,6 +119,11 @@ const displayController = (() => {
     const computerChoiceCard = document.querySelector(".computer-opponent");
     const secondHumanNameInput = document.querySelector("#second-name-input");
     const secondPlayerNameBox = document.querySelector(".second-player-name-box");
+    const startBut = document.querySelector(".start-button");
+    const choiceMsg = document.querySelector(".choice-msg");
+    const choiceContainer = document.querySelector(".choice-container");
+    const gameContainer = document.querySelector(".game-container");
+
 
     const displayTurn = () => {
         gameMsg.innerText = `${gameBoard.currentTurn.name}'s turn!`;
@@ -196,6 +201,43 @@ const displayController = (() => {
     gameGridsArr.forEach((grid, index) => grid.addEventListener('click', (event) => {
         markMove(event.target, index);
     }))
+
+    const toggleChoiceContainer = () => {
+        if (!choiceContainer.style.display || choiceContainer.style.display  === 'none')
+        choiceContainer.style.display = "flex";
+        else choiceContainer.style.display = "none";
+    }
+
+    const toggleGameContainer = () => {
+        if (!gameContainer.style.display || gameContainer.style.display  === 'none')
+        gameContainer.style.display = "flex";
+        else gameContainer.style.display = "none";
+    }
+
+    const toggleChoiceMsg = () => {
+        if (!choiceMsg.style.display || choiceMsg.style.display  === 'none')
+        choiceMsg.style.display = "flex";
+        else choiceMsg.style.display = "none";
+    }
+
+
+    const startGameClickEvent = (event) => {
+        event.preventDefault();
+        let gameCounter = 6;
+        toggleChoiceContainer(); 
+        choiceMsg.textContent = `Starting game in ${--gameCounter}`
+        let counterInterval = setInterval(()=>{
+            choiceMsg.textContent = `Starting game in ${--gameCounter}`
+            if (gameCounter <= 0){
+                clearInterval(counterInterval);
+                toggleChoiceMsg();
+                toggleGameContainer();
+            }
+        }, 1000)
+
+    }
+
+    secondPlayerNameBox.addEventListener("submit", startGameClickEvent)
 
     humanChoiceCard.addEventListener('click', chooseOpponent)
     computerChoiceCard.addEventListener('click', chooseOpponent)
