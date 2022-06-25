@@ -195,7 +195,7 @@ input:focus {
     color: #836a4a;
 }
 
-.player-name-choose {
+.login-container {
     display: flex;
     flex-direction: column;
     text-align: center;
