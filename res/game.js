@@ -4,7 +4,8 @@ const player = (name, move, isHuman=true) => {
     return {
         name,
         score,
-        move
+        move,
+        isHuman
     }
 };
 
