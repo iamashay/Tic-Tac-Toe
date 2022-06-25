@@ -10,6 +10,31 @@
 </head>
 <body>
     <div class="logo">Tic Tac Toe</div>
+
+
+    <form action="" class="login-container" style="display: flex;">
+        <label for="first-name-input" class="custom-text">Enter username:-</label>
+        <input type="text" id="first-name-input" class="name-input" maxlength="8" required>
+        <button type="submit">Play</button>            
+    </form>
+    
+    <div class="choice-container" style="display: none;">
+        <div class="custom-text">Choose your opponent:-</div>
+        <div class="choose-opponent">
+            <div class="human-opponent"><img src="https://icons.iconarchive.com/icons/diversity-avatars/avatars/96/cristiano-ronaldo-icon.png" alt="human-icon"><div>Human</div></div>
+            <div class="computer-opponent"><img src="https://icons.iconarchive.com/icons/diversity-avatars/avatars/96/robot-02-icon.png" alt="computer-icon"><div>Computer</div></div>
+
+        </div>
+        <form class="second-player-name-box">
+            <label for="secondname-input" class="custom-text-small">Second Player Name:</label>
+            <input type="text" id="second-name-input" class="name-input" maxlength="8" required>
+            <button type="submit">Start</button>
+        </form>
+    </div>
+
+    <div class="counter-msg custom-text" style="display: none;"></div>
+
+
     <div id="game-wrapper">
         <div class="game-container" style="display: none;">
             <div class="game-info">
@@ -36,27 +61,7 @@
             </div>
         </div>
 
-        <div class="choice-container" style="display: none;">
-            <div class="custom-text">Choose your opponent:-</div>
-            <div class="choose-opponent">
-                <div class="human-opponent"><img src="https://icons.iconarchive.com/icons/diversity-avatars/avatars/96/cristiano-ronaldo-icon.png" alt="human-icon"><div>Human</div></div>
-                <div class="computer-opponent"><img src="https://icons.iconarchive.com/icons/diversity-avatars/avatars/96/robot-02-icon.png" alt="computer-icon"><div>Computer</div></div>
 
-            </div>
-            <form class="second-player-name-box">
-                <label for="secondname-input" class="custom-text-small">Second Player Name:</label>
-                <input type="text" id="second-name-input" class="name-input" maxlength="8" required>
-                <button type="submit">Start</button>
-            </form>
-        </div>
-
-        <div class="counter-msg custom-text" style="display: none;"></div>
-
-        <form action="" class="login-container" style="display: flex;">
-            <label for="first-name-input" class="custom-text">Enter username:-</label>
-            <input type="text" id="first-name-input" class="name-input" maxlength="8" required>
-            <button type="submit">Play</button>            
-        </form>
 
     </div>
 </body>
