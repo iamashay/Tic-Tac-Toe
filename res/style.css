@@ -169,9 +169,9 @@ button:hover {
     font-size: 18px ;
 }
 
-#second-name-input {
+.name-input {
     padding: 10px;
-    width: 130px;
+    width: 220px;
     background: #fff7ed;
     border: 1px solid #e4dcd2;
     box-shadow: inset 1px 1px 1px 0px #d1d1d1;
@@ -194,6 +194,16 @@ input:focus {
     margin: 40px;
     color: #836a4a;
 }
+
+.player-name-choose {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 50vh;
+    gap: 15px;
+}
+
 
 
 @media only screen and (max-width: 600px) {
