@@ -9,8 +9,8 @@ const player = (name, move, isHuman=true) => {
     }
 };
 
-const player1 = player("Ashay", "X")
-const player2 = player("Rahul", "O")
+const player1 = player("", "X");
+const player2 = player("", "O");
 
 const gameBoard = (() => {
     let _gameArr = [];
@@ -117,7 +117,7 @@ const displayController = (() => {
     const continueGameBut = document.querySelector(".continue-but");
     const chooseOpponentDiv = document.querySelector('.choose-opponent')
     const humanChoiceCard = document.querySelector(".human-opponent");
-    const computerChoiceCard = document.querySelector(".computer-opponent");
+    const opponentChoiceCard = document.querySelector(".computer-opponent");
     const secondHumanNameInput = document.querySelector("#second-name-input");
     const secondPlayerNameBox = document.querySelector(".second-player-name-box");
     const startBut = document.querySelector(".start-button");
@@ -126,6 +126,14 @@ const displayController = (() => {
     const gameContainer = document.querySelector(".game-container");
     const loginContainer = document.querySelector(".login-container")
     const firstHumanNameInput = document.querySelector("#first-name-input");
+    const playerUsername = document.querySelector(".player-username");
+    const opponentUsername = document.querySelector(".opponent-username")
+    const playerIcon = document.querySelector(".player img");
+    const opponentIcon = document.querySelector(".opponent img");
+
+    const opponentHumanIconRes = "https://icons.iconarchive.com/icons/diversity-avatars/avatars/48/andy-warhol-icon.png";
+    const opponentComputerIconRes = "./res/robot.png";
+
 
     const displayTurn = () => {
         gameMsg.innerText = `${gameBoard.currentTurn.name}'s turn!`;
@@ -176,7 +184,7 @@ const displayController = (() => {
         gameBoard.continueGame();
         toggleContinueGamePopup()
         clearGameGrids();
-        gameMsg.innerText = `Game started! ${gameBoard.currentTurn.name} turn!`
+        gameMsg.innerText = `Game started! ${gameBoard.currentTurn.name}'s turn!`
     }
 
     const toggleSecondPlayerBox = () => {
@@ -188,13 +196,13 @@ const displayController = (() => {
     const chooseOpponent = (elm) => {
         
         if(elm.currentTarget.className.indexOf("human") > -1){
-            computerChoiceCard.style.display = "none";
+            opponentChoiceCard.style.display = "none";
             humanChoiceCard.style.opacity = "1";
             toggleSecondPlayerBox();
             secondHumanNameInput.focus();
         }else if (elm.currentTarget.className.indexOf("computer") > -1) {
             humanChoiceCard.style.display = "none";
-            computerChoiceCard.style.opacity = "1";
+            opponentChoiceCard.style.opacity = "1";
             startGameClickEvent();
         }
     }
@@ -231,6 +239,7 @@ const displayController = (() => {
         event.preventDefault();
         toggleLoginContainer();
         toggleChoiceContainer();
+        player1.name = firstHumanNameInput.value;
     };
 
     const startCounter = () => {
@@ -248,14 +257,29 @@ const displayController = (() => {
 
     const startGameClickEvent = (event) => {
         if (event) event.preventDefault(); //used in form event listener and with computer choice icon
+        if (secondHumanNameInput.value) {
+            player2.name = secondHumanNameInput.value;
+            opponentIcon.src = opponentHumanIconRes;
+            opponentIcon.alt = "opponent-human-icon";
+        }else {
+            player2.name = "Computer";
+            player2.isHuman = false;
+            opponentIcon.src = opponentComputerIconRes;
+            opponentIcon.alt = "opponent-computer-icon";
+        }
+
+        playerUsername.textContent = player1.name; //set username for the game screen score card
+        opponentUsername.textContent = player2.name;
+
         toggleCounterMsg();
         toggleChoiceContainer(); 
         startCounter();
     }
 
+
     secondPlayerNameBox.addEventListener("submit", startGameClickEvent)
     humanChoiceCard.addEventListener('click', chooseOpponent)
-    computerChoiceCard.addEventListener('click', chooseOpponent)
+    opponentChoiceCard.addEventListener('click', chooseOpponent)
 
     continueGameBut.addEventListener("click", continueGameDisplay)
     loginContainer.addEventListener("submit", loginGameEvent)
