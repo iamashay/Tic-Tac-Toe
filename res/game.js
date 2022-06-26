@@ -13,14 +13,13 @@ const player1 = player("", "X");
 const player2 = player("", "O");
 
 const gameBoard = (() => {
-    let _gameArr = [];
+    let _gameArr = Array(9);
 
     let currentTurn = player1; //First player to begin
     let continueGameStatus = true;
 
     const makeMove = (move, position) => {
         _gameArr[position] = move;
-        console.log(_gameArr)
     };
 
     const gameResult = () => {
@@ -92,8 +91,25 @@ const gameBoard = (() => {
 
     const continueGame = () => {
         continueGameStatus = true;
-        _gameArr = []
+        _gameArr = Array(9);
 
+    }
+
+    const getEmptyMovesIndex = () => {
+        const emptyIndexArr = []
+
+        for (let index = 0; index < _gameArr.length; index++){
+            if (!_gameArr[index]) 
+                emptyIndexArr.push(index);
+        }
+        return emptyIndexArr;
+    }
+
+    const getComputerMoveIndex = (computer) => {
+        let emptyIndexArr = getEmptyMovesIndex();
+        compRandom = Math.floor(Math.random() * (emptyIndexArr.length-1));
+        compMoveIndex = emptyIndexArr[compRandom];
+        return compMoveIndex;
     }
 
     return {
@@ -101,7 +117,8 @@ const gameBoard = (() => {
         getResult,
         currentTurn,
         getGameStatus,
-        continueGame
+        continueGame,
+        getComputerMoveIndex,
     }
 })();
 
@@ -185,6 +202,7 @@ const displayController = (() => {
         toggleContinueGamePopup()
         clearGameGrids();
         gameMsg.innerText = `Game started! ${gameBoard.currentTurn.name}'s turn!`
+        if (gameBoard.currentTurn === player2 && !player2.isHuman) compMarkMove();
     }
 
     const toggleSecondPlayerBox = () => {
@@ -207,8 +225,18 @@ const displayController = (() => {
         }
     }
 
+    const compMarkMove = () => {
+        let moveIndex = gameBoard.getComputerMoveIndex();
+        markMove(gameGrids[moveIndex], moveIndex);
+    }
+
     gameGridsArr.forEach((grid, index) => grid.addEventListener('click', (event) => {
-        markMove(event.target, index);
+        if (gameBoard.currentTurn === player1) {
+            markMove(event.target, index);
+            if(gameBoard.currentTurn === player2){
+                player2.isHuman ? markMove(event.target, index) : compMarkMove();
+            }
+        }
     }))
 
     const toggleChoiceContainer = () => {
@@ -275,6 +303,7 @@ const displayController = (() => {
         toggleChoiceContainer(); 
         startCounter();
     }
+
 
 
     secondPlayerNameBox.addEventListener("submit", startGameClickEvent)
