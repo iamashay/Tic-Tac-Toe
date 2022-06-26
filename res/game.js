@@ -9,8 +9,8 @@ const player = (name, move, isHuman=true) => {
     }
 };
 
-const player1 = player("", "X");
-const player2 = player("", "O");
+let player1 = player("", "X");
+let player2 = player("", "O");
 
 const gameBoard = (() => {
     let _gameArr = Array(9);
@@ -112,6 +112,17 @@ const gameBoard = (() => {
         return compMoveIndex;
     }
 
+    const reset = () => {
+        _gameArr = Array(9);
+        continueGameStatus = true;
+        player1.name = "";
+        player1.score = 0;
+        player2.isHuman = true;
+        player2.name = "";
+        player2.score = 0;
+        currentTurn = player1;
+    }
+
     return {
         makeMove,
         getResult,
@@ -119,6 +130,7 @@ const gameBoard = (() => {
         getGameStatus,
         continueGame,
         getComputerMoveIndex,
+        reset
     }
 })();
 
@@ -145,7 +157,6 @@ const displayController = (() => {
     const firstHumanNameInput = document.querySelector("#first-name-input");
     const playerUsername = document.querySelector(".player-username");
     const opponentUsername = document.querySelector(".opponent-username")
-    const playerIcon = document.querySelector(".player img");
     const opponentIcon = document.querySelector(".opponent img");
 
     const opponentHumanIconRes = "https://icons.iconarchive.com/icons/diversity-avatars/avatars/48/andy-warhol-icon.png";
@@ -153,7 +164,7 @@ const displayController = (() => {
 
 
     const displayTurn = () => {
-        gameMsg.innerText = `${gameBoard.currentTurn.name}'s turn!`;
+        gameMsg.textContent = `${gameBoard.currentTurn.name}'s turn!`;
     }
 
     const toggleTurn = () => {
@@ -163,15 +174,15 @@ const displayController = (() => {
     const updateResult = () => {
         let currentResult = gameBoard.getResult();
         if (currentResult === 'X'){
-            playerScoreCard.innerText = `(${player1.score})`
-            gameMsg.innerText = `${player1.name} won this round !`;
+            playerScoreCard.textContent = `(${player1.score})`
+            gameMsg.textContent = `${player1.name} won this round !`;
             toggleContinueGamePopup();
         }else if (currentResult === 'O'){
-            opponentScoreCard.innerText = `(${player2.score})`
-            gameMsg.innerText = `${player2.name} won this round !`;
+            opponentScoreCard.textContent = `(${player2.score})`
+            gameMsg.textContent = `${player2.name} won this round !`;
             toggleContinueGamePopup();
         }else if (currentResult === 'Tie'){
-            gameMsg.innerText = `It's a Tie`;
+            gameMsg.textContent = `It's a Tie`;
             toggleContinueGamePopup();
         }
     }
@@ -185,8 +196,8 @@ const displayController = (() => {
     const markMove = (elm, position) => {
         if (!gameBoard.getGameStatus()) return;
 
-        if (elm.innerText === "X" || elm.innerText === "O") return;
-        elm.innerText = gameBoard.currentTurn.move;
+        if (elm.textContent === "X" || elm.textContent === "O") return;
+        elm.textContent = gameBoard.currentTurn.move;
         gameBoard.makeMove(gameBoard.currentTurn.move, position)
         toggleTurn();
         displayTurn();
@@ -194,14 +205,14 @@ const displayController = (() => {
     }
     const clearGameGrids = () => {
         gameGridsArr.forEach((grid) => {
-            grid.innerText = "";
+            grid.textContent = "";
         })
     }
     const continueGameDisplay = () => {
         gameBoard.continueGame();
         toggleContinueGamePopup()
         clearGameGrids();
-        gameMsg.innerText = `Game started! ${gameBoard.currentTurn.name}'s turn!`
+        gameMsg.textContent = `Game started! ${gameBoard.currentTurn.name}'s turn!`
         if (gameBoard.currentTurn === player2 && !player2.isHuman) compMarkMove();
     }
 
@@ -233,9 +244,9 @@ const displayController = (() => {
     gameGridsArr.forEach((grid, index) => grid.addEventListener('click', (event) => {
         if (gameBoard.currentTurn === player1) {
             markMove(event.target, index);
-            if(gameBoard.currentTurn === player2){
-                player2.isHuman ? markMove(event.target, index) : compMarkMove();
-            }
+        }
+        if(gameBoard.currentTurn === player2){
+            player2.isHuman ? markMove(event.target, index) : compMarkMove();
         }
     }))
 
@@ -304,7 +315,23 @@ const displayController = (() => {
         startCounter();
     }
 
+    const reset = () => {
 
+        toggleGameContainer();
+        toggleLoginContainer();
+        secondHumanNameInput.value = "";
+        humanChoiceCard.style.display = "";
+        opponentChoiceCard.style.display = "";
+        opponentChoiceCard.style.opacity = "";
+        humanChoiceCard.style.opacity = "";
+        clearGameGrids();
+        gameBoard.reset();
+        toggleSecondPlayerBox();
+
+        if (gameBoard.getGameStatus()) continueGamePopup.style.display = "none";
+        playerScoreCard.textContent = "(0)"
+        opponentScoreCard.textContent = "(0)"
+    }
 
     secondPlayerNameBox.addEventListener("submit", startGameClickEvent)
     humanChoiceCard.addEventListener('click', chooseOpponent)
@@ -312,5 +339,6 @@ const displayController = (() => {
 
     continueGameBut.addEventListener("click", continueGameDisplay)
     loginContainer.addEventListener("submit", loginGameEvent)
+    restartBut.addEventListener("click", reset)
 })();
 
