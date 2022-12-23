@@ -113,7 +113,7 @@ button:hover {
     position: absolute;
     background: #bdb7ae38;
     display: none;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
 }
 
