@@ -26,47 +26,28 @@ const gameBoard = (() => {
         
         if (!continueGameStatus) return false;
 
-        let matchCount = {'X': 0, 'O': 0}; //initiate matches object
-
-        for (let i=0; i<= 2; i++){ //check vertical matches
-            matchCount = {'X': 0, 'O': 0}; //reset matches
-            for (let j=i; j<=i+6; j+=3){
-                if (_gameArr[i] === _gameArr[j]){
-                    matchCount[_gameArr[i]]++;
-                }
-                if (matchCount['X'] === 3) return 'X';
-                if (matchCount['O'] === 3) return 'O';
-            }
-
-            if (i === 0 || i === 2){ //check diagonal matches
-                matchCount = {'X': 0, 'O': 0}; //reset matches
-                let addFactor = 0;
-                i === 0 ? addFactor = 4 : addFactor = 2;
-                for (let x = i; x <= i+addFactor*2; x+=addFactor){
-                    if (_gameArr[i] === _gameArr[x]){
-                        matchCount[_gameArr[i]]++;
-                    }
-                    if (matchCount['X'] === 3) return 'X';
-                    if (matchCount['O'] === 3) return 'O';
-                }
-            }
-
-
+        if (_gameArr[0] == _gameArr[1] && _gameArr[1] == _gameArr[2] ||
+            _gameArr[0] == _gameArr[3] && _gameArr[3] == _gameArr[6] ||
+            _gameArr[0] == _gameArr[4] && _gameArr[4] == _gameArr[8]) {
+            return _gameArr[0];
         }
 
-        for (let i=0; i<= 6; i+=3){  //check horizontal matches
-            matchCount = {'X': 0, 'O': 0}; //reset matches
-            for (let j=i; j<=i+2; j++){
-                if (_gameArr[i] === _gameArr[j]){
-                    matchCount[_gameArr[i]]++;
-                }
-
-                if (matchCount['X'] === 3) return 'X';
-                if (matchCount['O'] === 3) return 'O';
-            }
-
-
+        if (_gameArr[2] == _gameArr[4] && _gameArr[4] == _gameArr[6] ||
+            _gameArr[2] == _gameArr[5] && _gameArr[5] == _gameArr[8]) {
+            return _gameArr[2];
         }
+
+        if (_gameArr[4] == _gameArr[1] && _gameArr[1] == _gameArr[7] ||
+            _gameArr[4] == _gameArr[3] && _gameArr[3] == _gameArr[5]) {
+            return _gameArr[4];
+        }
+
+        if (_gameArr[6] == _gameArr[7] && _gameArr[7] == _gameArr[8]) {
+            return _gameArr[6];
+        }
+        
+        
+        
         if (Object.values(_gameArr).length == 9) return "Tie";
 
         return false;
