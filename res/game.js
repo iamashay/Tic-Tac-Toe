@@ -218,8 +218,10 @@ const displayController = (() => {
     }
 
     const compMarkMove = () => {
-        let moveIndex = gameBoard.getComputerMoveIndex();
-        markMove(gameGrids[moveIndex], moveIndex);
+        setTimeout(() => {
+            let moveIndex = gameBoard.getComputerMoveIndex();
+            markMove(gameGrids[moveIndex], moveIndex);
+        }, 1500);
     }
 
     gameGridsArr.forEach((grid, index) => grid.addEventListener('click', (event) => {
