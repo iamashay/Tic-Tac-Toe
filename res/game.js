@@ -143,6 +143,17 @@ const displayController = (() => {
     const opponentHumanIconRes = "https://icons.iconarchive.com/icons/diversity-avatars/avatars/48/andy-warhol-icon.png";
     const opponentComputerIconRes = "./res/robot.png";
 
+    const enableGridClick = () => {
+        gameGridsArr.forEach((grid) => {
+            grid.style.pointerEvents = 'auto';
+        })
+    }
+
+    const disableGridClick = () => {
+        gameGridsArr.forEach((grid) => {
+            grid.style.pointerEvents = 'none';
+        })
+    }
 
     const displayTurn = () => {
         gameMsg.textContent = `${gameBoard.currentTurn.name}'s turn!`;
@@ -176,13 +187,15 @@ const displayController = (() => {
 
     const markMove = (elm, position) => {
         if (!gameBoard.getGameStatus()) return;
-
-        if (elm.textContent === "X" || elm.textContent === "O") return;
+        if (gameBoard.currentTurn.name === "Computer") disableGridClick();
         elm.textContent = gameBoard.currentTurn.move;
         gameBoard.makeMove(gameBoard.currentTurn.move, position)
         toggleTurn();
         displayTurn();
         updateResult();
+
+        if (gameBoard.currentTurn.name === "Computer" && gameBoard.getGameStatus) compMarkMove();
+
     }
     const clearGameGrids = () => {
         gameGridsArr.forEach((grid) => {
@@ -218,19 +231,18 @@ const displayController = (() => {
     }
 
     const compMarkMove = () => {
-        setTimeout(() => {
-            let moveIndex = gameBoard.getComputerMoveIndex();
-            markMove(gameGrids[moveIndex], moveIndex);
-        }, 1500);
+
+        let moveIndex = gameBoard.getComputerMoveIndex();
+        markMove(gameGrids[moveIndex], moveIndex);
+        enableGridClick();
+
     }
 
     gameGridsArr.forEach((grid, index) => grid.addEventListener('click', (event) => {
-        if (gameBoard.currentTurn === player1) {
-            markMove(event.target, index);
-        }
-        if(gameBoard.currentTurn === player2){
-            player2.isHuman ? markMove(event.target, index) : compMarkMove();
-        }
+        const elm = event.target;
+        if (elm.textContent === "X" || elm.textContent === "O") return;
+        markMove(elm, index);
+
     }))
 
     const toggleChoiceContainer = () => {
@@ -299,7 +311,7 @@ const displayController = (() => {
     }
 
     const reset = () => {
-
+        if (player2.isHuman) toggleSecondPlayerBox();
         toggleGameContainer();
         toggleLoginContainer();
         secondHumanNameInput.value = "";
@@ -309,8 +321,6 @@ const displayController = (() => {
         humanChoiceCard.style.opacity = "";
         clearGameGrids();
         gameBoard.reset();
-        toggleSecondPlayerBox();
-
         if (gameBoard.getGameStatus()) continueGamePopup.style.display = "none";
         playerScoreCard.textContent = "(0)"
         opponentScoreCard.textContent = "(0)"
