@@ -68,7 +68,7 @@ const gameBoard = (() => {
 
     const getGameStatus = () => continueGameStatus;
 
-
+    const getGridArrayLength = () => Object.values(_gameArr).length;
 
     const continueGame = () => {
         continueGameStatus = true;
@@ -111,6 +111,7 @@ const gameBoard = (() => {
         getGameStatus,
         continueGame,
         getComputerMoveIndex,
+        getGridArrayLength,
         reset
     }
 })();
@@ -155,8 +156,13 @@ const displayController = (() => {
         })
     }
 
-    const displayTurn = () => {
-        gameMsg.textContent = `${gameBoard.currentTurn.name}'s turn!`;
+    const displayTurn = (isContinue) => {
+        if (gameBoard.getGridArrayLength() === 0 && !isContinue){ 
+            gameMsg.textContent = `Game started! ${gameBoard.currentTurn.name}'s turn!`;
+        }else {
+            gameMsg.textContent = `${gameBoard.currentTurn.name}'s turn!`;
+        }
+
     }
 
     const toggleTurn = () => {
@@ -206,7 +212,7 @@ const displayController = (() => {
         gameBoard.continueGame();
         toggleContinueGamePopup()
         clearGameGrids();
-        gameMsg.textContent = `Game started! ${gameBoard.currentTurn.name}'s turn!`
+        displayTurn(true);
         if (gameBoard.currentTurn === player2 && !player2.isHuman) compMarkMove();
     }
 
@@ -304,7 +310,7 @@ const displayController = (() => {
 
         playerUsername.textContent = player1.name; //set username for the game screen score card
         opponentUsername.textContent = player2.name;
-
+        displayTurn();
         toggleCounterMsg();
         toggleChoiceContainer(); 
         startCounter();
@@ -319,6 +325,8 @@ const displayController = (() => {
         opponentChoiceCard.style.display = "";
         opponentChoiceCard.style.opacity = "";
         humanChoiceCard.style.opacity = "";
+        
+        enableGridClick();
         clearGameGrids();
         gameBoard.reset();
         if (gameBoard.getGameStatus()) continueGamePopup.style.display = "none";
