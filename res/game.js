@@ -98,62 +98,75 @@ const gameBoard = (() => {
     const getComputerMoveIndex = (isAI = false) => {
         let ai = "O"
         let emptyIndexArr = getEmptyMovesIndex();
-        let bestScore = Infinity;
+        let bestScore = [Infinity, Infinity];
         let bestMoveIndex;
         if (!isAI){        
             compRandom = generateRandomNumber(emptyIndexArr.length-1);
             compMoveIndex = emptyIndexArr[compRandom];
             return compMoveIndex;
         }else {
-            
+            let bestDepth = Infinity;
             for (let i =0; i < _gameArr.length; i++){
                 if (!_gameArr[i]){
                     _gameArr[i] = ai;
-                    let score = minimax(_gameArr, true);
+                    let score = minimax(_gameArr, true, 0);
                     delete _gameArr[i];
-                    console.log(score)
-                    if (score < bestScore){
+                    if (score[0] == bestScore[0] && score[1] < bestScore[1] ||
+                        score[0] < bestScore[0] ){
+                            //console.log("Comparing", score, bestScore)
                         bestScore = score
                         bestMoveIndex = i
                     }
-
+                    //console.log(bestScore)
                 }
             }
+            //console.log("Best move index", bestMoveIndex)
             return bestMoveIndex;
         }
     }
 
 
-    const minimax = (gameArr, isMax = true) => {
+    const minimax = (gameArr, isMax = true, depth) => {
         const currentGameResult = gameResult(gameArr);
         if (currentGameResult === "Tie"){
-            return 0
+            return [0, depth]
         }else if (currentGameResult === "X"){
-            return 1
+            return [1, depth]
         }else if (currentGameResult === "O"){
-            return -1
+            return [-1, depth]
         }
+        
+        let bestDepth = Infinity
 
         if(isMax){
-            let bestScore = -Infinity;
+            let bestScore = [-Infinity, depth];
             for (let i =0; i < gameArr.length; i++){
                 if (!gameArr[i]){
                     gameArr[i] = "X";
 
-                    let score = minimax(gameArr, false);
+                    let score = minimax(gameArr, false, depth+1);
                     delete gameArr[i];
-                    bestScore = Math.max(bestScore, score)
+                    if ((bestScore[0] == score[0] && score[1] < bestDepth)
+                        || (bestScore[0] < score[0]) ){
+                        bestScore = score
+                        bestDepth = score[1]
+                    }
                 }
             }
             return bestScore;
         }else{
-            let bestScore = Infinity;
+            let bestScore = [Infinity, depth];
+
             for (let i =0; i < gameArr.length; i++){
                 if (!gameArr[i]){
                     gameArr[i] = "O";
-                    let score = minimax(gameArr, true);
+                    let score = minimax(gameArr, true, depth+1);
                     delete gameArr[i];
-                    bestScore = Math.min(bestScore, score)
+                    if ((bestScore[0] == score[0] && score[1] < bestDepth) || 
+                        (bestScore[0] > score[0])  ){
+                        bestScore = score
+                        bestDepth = score[1]
+                    }
                 }
             }
             return bestScore;
