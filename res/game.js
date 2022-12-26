@@ -105,7 +105,6 @@ const gameBoard = (() => {
             compMoveIndex = emptyIndexArr[compRandom];
             return compMoveIndex;
         }else {
-            let bestDepth = Infinity;
             for (let i =0; i < _gameArr.length; i++){
                 if (!_gameArr[i]){
                     _gameArr[i] = ai;
