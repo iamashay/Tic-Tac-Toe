@@ -160,13 +160,22 @@ button:hover {
     opacity: 1;
 }
 
-.second-player-name-box {
+.second-player-name-box,  .computer-level-box{
     display: none;
     flex-direction: column;
     align-items: center;
     gap: 5px;  
     text-align: left;
     font-size: 18px ;
+}
+
+#difficulty-level {
+    height: 30px;
+    background: #000000;
+    color: #fff;
+    font-size: 20px;
+    border: 1px solid #a67f50;
+    margin: 20px;
 }
 
 .name-input {
