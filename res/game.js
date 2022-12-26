@@ -1,4 +1,3 @@
-
 const player = (name, move, isHuman=true) => {
     let score = 0;
     return {
@@ -22,33 +21,37 @@ const gameBoard = (() => {
         _gameArr[position] = move;
     };
 
-    const gameResult = () => {
+    const generateRandomNumber = (limit) => {
+        return Math.floor(Math.random() * (limit));
+    }
+
+    const gameResult = (gameArr = _gameArr) => {
         
         if (!continueGameStatus) return false;
 
-        if (_gameArr[0] == _gameArr[1] && _gameArr[1] == _gameArr[2] ||
-            _gameArr[0] == _gameArr[3] && _gameArr[3] == _gameArr[6] ||
-            _gameArr[0] == _gameArr[4] && _gameArr[4] == _gameArr[8]) {
-            return _gameArr[0];
+        if (gameArr[0] == gameArr[1] && gameArr[1] == gameArr[2] ||
+            gameArr[0] == gameArr[3] && gameArr[3] == gameArr[6] ||
+            gameArr[0] == gameArr[4] && gameArr[4] == gameArr[8]) {
+            return gameArr[0];
         }
 
-        if (_gameArr[2] == _gameArr[4] && _gameArr[4] == _gameArr[6] ||
-            _gameArr[2] == _gameArr[5] && _gameArr[5] == _gameArr[8]) {
-            return _gameArr[2];
+        if (gameArr[2] == gameArr[4] && gameArr[4] == gameArr[6] ||
+            gameArr[2] == gameArr[5] && gameArr[5] == gameArr[8]) {
+            return gameArr[2];
         }
 
-        if (_gameArr[4] == _gameArr[1] && _gameArr[1] == _gameArr[7] ||
-            _gameArr[4] == _gameArr[3] && _gameArr[3] == _gameArr[5]) {
-            return _gameArr[4];
+        if (gameArr[4] == gameArr[1] && gameArr[1] == gameArr[7] ||
+            gameArr[4] == gameArr[3] && gameArr[3] == gameArr[5]) {
+            return gameArr[4];
         }
 
-        if (_gameArr[6] == _gameArr[7] && _gameArr[7] == _gameArr[8]) {
-            return _gameArr[6];
+        if (gameArr[6] == gameArr[7] && gameArr[7] == gameArr[8]) {
+            return gameArr[6];
         }
         
         
         
-        if (Object.values(_gameArr).length == 9) return "Tie";
+        if (Object.values(gameArr).length == 9) return "Tie";
 
         return false;
 
@@ -62,11 +65,17 @@ const gameBoard = (() => {
         }else if(player2.move === currentResult){
             player2.score += 1;
             continueGameStatus = false;
+        }else if(currentResult === "Tie"){
+            continueGameStatus = false;
         }
         return currentResult;
     }
 
     const getGameStatus = () => continueGameStatus;
+    
+    const getCurrentTurn = () => currentTurn;
+    
+    const setCurrentTurn = (value) => currentTurn = value;
 
     const getGridArrayLength = () => Object.values(_gameArr).length;
 
@@ -86,11 +95,70 @@ const gameBoard = (() => {
         return emptyIndexArr;
     }
 
-    const getComputerMoveIndex = (computer) => {
+    const getComputerMoveIndex = (isAI = false) => {
+        let ai = "O"
         let emptyIndexArr = getEmptyMovesIndex();
-        compRandom = Math.floor(Math.random() * (emptyIndexArr.length-1));
-        compMoveIndex = emptyIndexArr[compRandom];
-        return compMoveIndex;
+        let bestScore = Infinity;
+        let bestMoveIndex;
+        if (!isAI){        
+            compRandom = generateRandomNumber(emptyIndexArr.length-1);
+            compMoveIndex = emptyIndexArr[compRandom];
+            return compMoveIndex;
+        }else {
+            
+            for (let i =0; i < _gameArr.length; i++){
+                if (!_gameArr[i]){
+                    _gameArr[i] = ai;
+                    let score = minimax(_gameArr, true);
+                    delete _gameArr[i];
+                    console.log(score)
+                    if (score < bestScore){
+                        bestScore = score
+                        bestMoveIndex = i
+                    }
+
+                }
+            }
+            return bestMoveIndex;
+        }
+    }
+
+
+    const minimax = (gameArr, isMax = true) => {
+        const currentGameResult = gameResult(gameArr);
+        if (currentGameResult === "Tie"){
+            return 0
+        }else if (currentGameResult === "X"){
+            return 1
+        }else if (currentGameResult === "O"){
+            return -1
+        }
+
+        if(isMax){
+            let bestScore = -Infinity;
+            for (let i =0; i < gameArr.length; i++){
+                if (!gameArr[i]){
+                    gameArr[i] = "X";
+
+                    let score = minimax(gameArr, false);
+                    delete gameArr[i];
+                    bestScore = Math.max(bestScore, score)
+                }
+            }
+            return bestScore;
+        }else{
+            let bestScore = Infinity;
+            for (let i =0; i < gameArr.length; i++){
+                if (!gameArr[i]){
+                    gameArr[i] = "O";
+                    let score = minimax(gameArr, true);
+                    delete gameArr[i];
+                    bestScore = Math.min(bestScore, score)
+                }
+            }
+            return bestScore;
+        }
+
     }
 
     const reset = () => {
@@ -107,7 +175,8 @@ const gameBoard = (() => {
     return {
         makeMove,
         getResult,
-        currentTurn,
+        getCurrentTurn,
+        setCurrentTurn,
         getGameStatus,
         continueGame,
         getComputerMoveIndex,
@@ -117,7 +186,6 @@ const gameBoard = (() => {
 })();
 
 const displayController = (() => {
-
     const restartBut = document.querySelector(".restart-game");
     const gameGrids = document.querySelectorAll(".game-grid");
     const gameGridsArr = [...gameGrids];
@@ -126,12 +194,10 @@ const displayController = (() => {
     const gameMsg = document.querySelector(".game-message");
     const continueGamePopup = document.querySelector(".continue-popup");
     const continueGameBut = document.querySelector(".continue-but");
-    const chooseOpponentDiv = document.querySelector('.choose-opponent')
     const humanChoiceCard = document.querySelector(".human-opponent");
     const opponentChoiceCard = document.querySelector(".computer-opponent");
     const secondHumanNameInput = document.querySelector("#second-name-input");
     const secondPlayerNameBox = document.querySelector(".second-player-name-box");
-    const startBut = document.querySelector(".start-button");
     const counterMsg = document.querySelector(".counter-msg");
     const choiceContainer = document.querySelector(".choice-container");
     const gameContainer = document.querySelector(".game-container");
@@ -140,9 +206,14 @@ const displayController = (() => {
     const playerUsername = document.querySelector(".player-username");
     const opponentUsername = document.querySelector(".opponent-username")
     const opponentIcon = document.querySelector(".opponent img");
+    const computerLevelBox = document.querySelector(".computer-level-box");
+    const chooseDifficulty = document.querySelector("#difficulty-level");
 
     const opponentHumanIconRes = "https://icons.iconarchive.com/icons/diversity-avatars/avatars/48/andy-warhol-icon.png";
     const opponentComputerIconRes = "./res/robot.png";
+    const aiIconRes = "./res/ai.png";
+    
+    let isComputerHard = false; //talks
 
     const enableGridClick = () => {
         gameGridsArr.forEach((grid) => {
@@ -158,15 +229,15 @@ const displayController = (() => {
 
     const displayTurn = (isContinue) => {
         if (gameBoard.getGridArrayLength() === 0 && !isContinue){ 
-            gameMsg.textContent = `Game started! ${gameBoard.currentTurn.name}'s turn!`;
+            gameMsg.textContent = `Game started! ${gameBoard.getCurrentTurn().name}'s turn!`;
         }else {
-            gameMsg.textContent = `${gameBoard.currentTurn.name}'s turn!`;
+            gameMsg.textContent = `${gameBoard.getCurrentTurn().name}'s turn!`;
         }
 
     }
 
     const toggleTurn = () => {
-        gameBoard.currentTurn === player1 ? gameBoard.currentTurn = player2 : gameBoard.currentTurn = player1;
+        gameBoard.getCurrentTurn() === player1 ? gameBoard.setCurrentTurn(player2) : gameBoard.setCurrentTurn(player1);
     }
 
     const updateResult = () => {
@@ -193,14 +264,14 @@ const displayController = (() => {
 
     const markMove = (elm, position) => {
         if (!gameBoard.getGameStatus()) return;
-        if (gameBoard.currentTurn.name === "Computer") disableGridClick();
-        elm.textContent = gameBoard.currentTurn.move;
-        gameBoard.makeMove(gameBoard.currentTurn.move, position)
+        if (gameBoard.getCurrentTurn().name === "Computer") disableGridClick();
+        elm.textContent = gameBoard.getCurrentTurn().move;
+        gameBoard.makeMove(gameBoard.getCurrentTurn().move, position)
         toggleTurn();
         displayTurn();
         updateResult();
 
-        if (gameBoard.currentTurn.name === "Computer" && gameBoard.getGameStatus) compMarkMove();
+        if (gameBoard.getCurrentTurn().name === "Computer" && gameBoard.getGameStatus()) compMarkMove();
 
     }
     const clearGameGrids = () => {
@@ -213,13 +284,20 @@ const displayController = (() => {
         toggleContinueGamePopup()
         clearGameGrids();
         displayTurn(true);
-        if (gameBoard.currentTurn === player2 && !player2.isHuman) compMarkMove();
+        if (gameBoard.getCurrentTurn() === player2 && !player2.isHuman) compMarkMove();
     }
 
     const toggleSecondPlayerBox = () => {
         if (!secondPlayerNameBox.style.display || secondPlayerNameBox.style.display  === 'none')
             secondPlayerNameBox.style.display = "flex";
         else secondPlayerNameBox.style.display = "none";
+    } 
+
+    const toggleComputerLevelBox = () => {
+        if (!computerLevelBox.style.display || computerLevelBox.style.display  === 'none')
+            computerLevelBox.style.display = "flex";
+        else 
+            computerLevelBox.style.display = "none";
     } 
 
     const chooseOpponent = (elm) => {
@@ -232,19 +310,18 @@ const displayController = (() => {
         }else if (elm.currentTarget.className.indexOf("computer") > -1) {
             humanChoiceCard.style.display = "none";
             opponentChoiceCard.style.opacity = "1";
-            startGameClickEvent();
+            toggleComputerLevelBox();
         }
     }
 
     const compMarkMove = () => {
-
-        let moveIndex = gameBoard.getComputerMoveIndex();
+        let moveIndex = gameBoard.getComputerMoveIndex(isComputerHard);
         markMove(gameGrids[moveIndex], moveIndex);
         enableGridClick();
-
     }
 
     gameGridsArr.forEach((grid, index) => grid.addEventListener('click', (event) => {
+        
         const elm = event.target;
         if (elm.textContent === "X" || elm.textContent === "O") return;
         markMove(elm, index);
@@ -306,6 +383,10 @@ const displayController = (() => {
             player2.isHuman = false;
             opponentIcon.src = opponentComputerIconRes;
             opponentIcon.alt = "opponent-computer-icon";
+            if (chooseDifficulty.value === "hard"){
+                isComputerHard = true;
+                opponentIcon.src = aiIconRes;
+            }
         }
 
         playerUsername.textContent = player1.name; //set username for the game screen score card
@@ -317,7 +398,7 @@ const displayController = (() => {
     }
 
     const reset = () => {
-        if (player2.isHuman) toggleSecondPlayerBox();
+        player2.isHuman ? toggleSecondPlayerBox() : toggleComputerLevelBox();
         toggleGameContainer();
         toggleLoginContainer();
         secondHumanNameInput.value = "";
@@ -325,16 +406,17 @@ const displayController = (() => {
         opponentChoiceCard.style.display = "";
         opponentChoiceCard.style.opacity = "";
         humanChoiceCard.style.opacity = "";
-        
+        isComputerHard = false;
         enableGridClick();
         clearGameGrids();
         gameBoard.reset();
         if (gameBoard.getGameStatus()) continueGamePopup.style.display = "none";
-        playerScoreCard.textContent = "(0)"
-        opponentScoreCard.textContent = "(0)"
+        playerScoreCard.textContent = "(0)";
+        opponentScoreCard.textContent = "(0)";
     }
 
     secondPlayerNameBox.addEventListener("submit", startGameClickEvent)
+    computerLevelBox.addEventListener("submit", startGameClickEvent)
     humanChoiceCard.addEventListener('click', chooseOpponent)
     opponentChoiceCard.addEventListener('click', chooseOpponent)
 
