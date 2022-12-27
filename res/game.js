@@ -11,8 +11,8 @@ const player = (name, move, isHuman=true) => {
 let player1 = player("", "X");
 let player2 = player("", "O");
 
-const gameBoard = (() => {
-    let _gameArr = Array(9);
+const gameBoard = (() => { //controls all the logic of the game
+    let _gameArr = Array(9); //moves are places in this array
 
     let currentTurn = player1; //First player to begin
     let continueGameStatus = true;
@@ -25,7 +25,7 @@ const gameBoard = (() => {
         return Math.floor(Math.random() * (limit));
     }
 
-    const gameResult = (gameArr = _gameArr) => {
+    const gameResult = (gameArr = _gameArr) => { //checks if someone has won or not
         
         if (!continueGameStatus) return false;
 
@@ -57,7 +57,7 @@ const gameBoard = (() => {
 
     }
 
-    const getResult = () => {
+    const getResult = () => { //updates score
         let currentResult = gameResult();
         if (player1.move === currentResult){
             player1.score += 1;
@@ -82,7 +82,6 @@ const gameBoard = (() => {
     const continueGame = () => {
         continueGameStatus = true;
         _gameArr = Array(9);
-
     }
 
     const getEmptyMovesIndex = () => {
@@ -95,7 +94,7 @@ const gameBoard = (() => {
         return emptyIndexArr;
     }
 
-    const getComputerMoveIndex = (isAI = false) => {
+    const getComputerMoveIndex = (isAI = false) => { //returns a move index for the computer
         let ai = "O"
         let emptyIndexArr = getEmptyMovesIndex();
         let bestScore = [Infinity, Infinity];
@@ -125,7 +124,7 @@ const gameBoard = (() => {
     }
 
 
-    const minimax = (gameArr, isMax = true, depth) => {
+    const minimax = (gameArr, isMax = true, depth) => { //minimax algorithm returning the best move with lowest depth
         const currentGameResult = gameResult(gameArr);
         if (currentGameResult === "Tie"){
             return [0, depth]
@@ -138,7 +137,7 @@ const gameBoard = (() => {
         let bestDepth = Infinity
 
         if(isMax){
-            let bestScore = [-Infinity, depth];
+            let bestScore = [-Infinity, Infinity]; //setting the score to Infinity for min, and depth to infinity to capture lowest depth
             for (let i =0; i < gameArr.length; i++){
                 if (!gameArr[i]){
                     gameArr[i] = "X";
@@ -154,7 +153,7 @@ const gameBoard = (() => {
             }
             return bestScore;
         }else{
-            let bestScore = [Infinity, depth];
+            let bestScore = [Infinity, Infinity]; //setting the score to Infinity for min, and depth to infinity to capture lowest depth
 
             for (let i =0; i < gameArr.length; i++){
                 if (!gameArr[i]){
@@ -173,7 +172,7 @@ const gameBoard = (() => {
 
     }
 
-    const reset = () => {
+    const reset = () => { //reset the gameBoard
         _gameArr = Array(9);
         continueGameStatus = true;
         player1.name = "";
@@ -197,7 +196,7 @@ const gameBoard = (() => {
     }
 })();
 
-const displayController = (() => {
+const displayController = (() => { //controls all the frontend relataed events 
     const restartBut = document.querySelector(".restart-game");
     const gameGrids = document.querySelectorAll(".game-grid");
     const gameGridsArr = [...gameGrids];
