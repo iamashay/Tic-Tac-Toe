@@ -104,25 +104,31 @@ const gameBoard = (() => { //controls all the logic of the game
             compMoveIndex = emptyIndexArr[compRandom];
             return compMoveIndex;
         }else {
+            let alpha = -Infinity;
+            let beta = Infinity;
+            //let startTime = performance.now();
+
             for (let i =0; i < _gameArr.length; i++){
                 if (!_gameArr[i]){
                     _gameArr[i] = ai;
-                    let score = minimax(_gameArr, true, 0);
+                    let score = minimax(_gameArr, true, 0, alpha, beta );
                     delete _gameArr[i];
                     if (bestScore > score){
                         bestScore = score;
                         bestMoveIndex = i;
                     }
+                    beta = Math.min(bestScore, beta);
                     //console.log(bestScore)
                 }
             }
-            //console.log("Best move index", bestMoveIndex)
+            //let endTime = performance.now();
+            //console.log(`It took ${endTime-startTime}`)
             return bestMoveIndex;
         }
     }
 
 
-    const minimax = (gameArr, isMax = true, depth) => { //minimax algorithm returning the best move with lowest depth
+    const minimax = (gameArr, isMax = true, depth, alpha, beta) => { //minimax algorithm returning the best move with lowest depth
         const currentGameResult = gameResult(gameArr);
         if (currentGameResult === "Tie"){
             return 0
@@ -142,6 +148,10 @@ const gameBoard = (() => { //controls all the logic of the game
                     let score = minimax(gameArr, false, depth+1);
                     delete gameArr[i];
                     bestScore = Math.max(score, bestScore)
+                    alpha = Math.max(alpha, bestScore)
+                }
+                if(beta <= alpha){
+                    break
                 }
             }
             return bestScore;
@@ -154,6 +164,10 @@ const gameBoard = (() => { //controls all the logic of the game
                     let score = minimax(gameArr, true, depth+1);
                     delete gameArr[i];
                     bestScore = Math.min(score, bestScore);
+                    beta = Math.min(beta, bestScore)
+                }
+                if(beta <= alpha){
+                    break
                 }
             }
             return bestScore;
