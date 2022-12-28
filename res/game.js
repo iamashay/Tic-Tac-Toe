@@ -97,7 +97,7 @@ const gameBoard = (() => { //controls all the logic of the game
     const getComputerMoveIndex = (isAI = false) => { //returns a move index for the computer
         let ai = "O"
         let emptyIndexArr = getEmptyMovesIndex();
-        let bestScore = [Infinity, Infinity];
+        let bestScore = Infinity;
         let bestMoveIndex;
         if (!isAI){        
             compRandom = generateRandomNumber(emptyIndexArr.length-1);
@@ -109,11 +109,9 @@ const gameBoard = (() => { //controls all the logic of the game
                     _gameArr[i] = ai;
                     let score = minimax(_gameArr, true, 0);
                     delete _gameArr[i];
-                    if (score[0] == bestScore[0] && score[1] < bestScore[1] ||
-                        score[0] < bestScore[0] ){
-                            //console.log("Comparing", score, bestScore)
-                        bestScore = score
-                        bestMoveIndex = i
+                    if (bestScore > score){
+                        bestScore = score;
+                        bestMoveIndex = i;
                     }
                     //console.log(bestScore)
                 }
@@ -127,44 +125,35 @@ const gameBoard = (() => { //controls all the logic of the game
     const minimax = (gameArr, isMax = true, depth) => { //minimax algorithm returning the best move with lowest depth
         const currentGameResult = gameResult(gameArr);
         if (currentGameResult === "Tie"){
-            return [0, depth]
+            return 0
         }else if (currentGameResult === "X"){
-            return [1, depth]
+            return 10 - depth
         }else if (currentGameResult === "O"){
-            return [-1, depth]
+            return depth - 10
         }
         
-        let bestDepth = Infinity
 
         if(isMax){
-            let bestScore = [-Infinity, Infinity]; //setting the score to Infinity for min, and depth to infinity to capture lowest depth
+            let bestScore = -Infinity; //setting the score to Infinity for min, and depth to infinity to capture lowest depth
             for (let i =0; i < gameArr.length; i++){
                 if (!gameArr[i]){
                     gameArr[i] = "X";
 
                     let score = minimax(gameArr, false, depth+1);
                     delete gameArr[i];
-                    if ((bestScore[0] == score[0] && score[1] < bestDepth)
-                        || (bestScore[0] < score[0]) ){
-                        bestScore = score
-                        bestDepth = score[1]
-                    }
+                    bestScore = Math.max(score, bestScore)
                 }
             }
             return bestScore;
         }else{
-            let bestScore = [Infinity, Infinity]; //setting the score to Infinity for min, and depth to infinity to capture lowest depth
+            let bestScore = Infinity; //setting the score to Infinity for min, and depth to infinity to capture lowest depth
 
             for (let i =0; i < gameArr.length; i++){
                 if (!gameArr[i]){
                     gameArr[i] = "O";
                     let score = minimax(gameArr, true, depth+1);
                     delete gameArr[i];
-                    if ((bestScore[0] == score[0] && score[1] < bestDepth) || 
-                        (bestScore[0] > score[0])  ){
-                        bestScore = score
-                        bestDepth = score[1]
-                    }
+                    bestScore = Math.min(score, bestScore);
                 }
             }
             return bestScore;
